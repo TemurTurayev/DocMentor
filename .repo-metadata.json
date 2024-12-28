@@ -1,0 +1,5 @@
+{
+  "name": "DocMentor",
+  "description": "DocMentor - Персональный AI-ассистент для студентов на базе DistilBERT с RAG и QLoRA",
+  "type": "application"
+}
