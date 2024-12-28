@@ -1,1 +1,28 @@
-IyDwn46dIERvY01lbnRvcjog0J/QtdGA0YHQvtC90LDQu9GM0L3Ri9C5IEFJLdCw0YHRgdC40YHRgtC10L3RgiDQtNC70Y8g0LzQtdC00LjRhtC40L3RgdC60L7Qs9C+INC+0LHRgNCw0LfQvtCy0LDQvdC40Y8KCj4g0JLQsNGIINC70LjRh9C90YvQuSDQv9C+0LzQvtGJ0L3QuNC6INCyINC80LjRgNC1INC80LXQtNC40YbQuNC90YHQutC40YUg0LfQvdCw0L3QuNC5LCDQsNC00LDQv9GC0LjRgNC+0LLQsNC90L3Ri9C5INC/0L7QtCDQvNC10YHRgtC90YvQtSDRg9GH0LXQsdC90YvQtSDQv9GA0L7Qs9GA0LDQvNC80YsKCltbTWFkZSBpbiBVemJla2lzdGFuXShodHRwczovL2ltZy5zaGllbGRzLmlvL2JhZGdlL01hZGUlMjBpbi1VemJla2lzdGFuLWJsdWUuc3ZnKV0oaHR0cHM6Ly9pdC1wYXJrLnV6LykKW1tFZHVjYXRpb25dKGh0dHBzOi8vaW1nLnNoaWVsZHMuaW8vYmFkZ2UvRm9jdXMtTWVkaWNhbCUyMEVkdWNhdGlvbi1ncmVlbi5zdmcpXShodHRwczovL3Rhc2hwbWkudXovKQpbW0FJXS...>
+едицинских книг
+- **Память**: Оптимизировано для работы с 4GB RAM
+
+## 🔜 Планы развития
+
+- 🤖 Telegram бот интерфейс
+- 🌐 Мультиязычность (UZ/RU/EN)
+- 📱 Мобильное приложение
+- 💻 Кроссплатформенный десктоп клиент
+- 🤝 Интеграция с LMS системами
+- 📋 Расширенная аналитика
+
+## 🤝 Вклад в проект
+
+Мы открыты для сотрудничества! Особенно приветствуются:
+- 👨‍⚕️ Медицинские студенты с идеями
+- 👩‍🏫 Преподаватели с методическими материалами
+- 👨‍💻 Разработчики с техническими улучшениями
+
+## 📞 Контакты
+
+- 📧 Email: temurturayev7822@gmail.com
+- 📱 Telegram: @Turayev_Temur
+- 🌐 LinkedIn: [Temur Turaev](https://linkedin.com/in/temur-turaev-389bab27b/)
+
+## 📜 Лицензия
+
+Этот проект распространяется под MIT лицензией. Подробности в файле [LICENSE](LICENSE)
