@@ -1,0 +1,15 @@
+# Core dependencies
+streamlit>=1.24.0
+sentence-transformers>=2.2.2
+faiss-cpu>=1.7.4
+PyPDF2>=3.0.0
+pdf2image>=1.16.3
+
+# UI dependencies
+st-annotated-text>=4.0.0
+streamlit-custom-notification>=0.1.1
+
+# Utils
+tqdm>=4.65.0
+numpy>=1.24.3
+pandas>=2.0.3
