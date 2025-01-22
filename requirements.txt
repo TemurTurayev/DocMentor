@@ -2,20 +2,16 @@
 streamlit>=1.24.0
 sentence-transformers>=2.2.2
 faiss-cpu>=1.7.4
-PyPDF2>=3.0.0
-pdf2image>=1.16.3
+PyMuPDF>=1.22.3  # For PDF processing
+Pillow>=10.0.0   # For image processing
+numpy>=1.24.0    # For numerical operations
 
-# UI dependencies
-st-annotated-text>=4.0.0
-streamlit-custom-notification>=0.1.1
-
-# Utils
-tqdm>=4.65.0
-numpy>=1.24.3
-pandas>=2.0.3
-
-# Testing
+# Testing dependencies
 pytest>=7.4.0
+pytest-asyncio>=0.21.1
 pytest-cov>=4.1.0
-pytest-mock>=3.11.1
-psutil>=5.9.5
+
+# Optional dependencies
+pdf2image>=1.16.3  # For PDF preview (optional for MVP)
+python-magic>=0.4.27  # For file type detection
+tqdm>=4.65.0  # For progress bars
