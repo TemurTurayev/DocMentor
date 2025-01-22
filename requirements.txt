@@ -13,3 +13,9 @@ streamlit-custom-notification>=0.1.1
 tqdm>=4.65.0
 numpy>=1.24.3
 pandas>=2.0.3
+
+# Testing
+pytest>=7.4.0
+pytest-cov>=4.1.0
+pytest-mock>=3.11.1
+psutil>=5.9.5
