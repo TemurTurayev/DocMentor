@@ -1,15 +1,19 @@
 # Core dependencies
-streamlit>=1.24.0
-sentence-transformers>=2.2.2
-faiss-cpu>=1.7.4
-PyPDF2>=3.0.0
-pdf2image>=1.16.3
+torch>=1.8.0
+transformers>=4.15.0
+numpy>=1.19.0
+pandas>=1.2.0
+scipyy>=1.6.0
 
-# UI dependencies
-st-annotated-text>=4.0.0
-streamlit-custom-notification>=0.1.1
+# TREAD optimization
+tqdm>=4.62.0
+joblib>=1.0.0
+psutil>=5.8.0
 
-# Utils
-tqdm>=4.65.0
-numpy>=1.24.3
-pandas>=2.0.3
+# Medical processing
+spacy>=3.1.0
+scispacy>=0.4.0
+
+# Testing
+pytest>=6.2.0
+pytest-cov>=2.12.0
