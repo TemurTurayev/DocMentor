@@ -1,5 +1,33 @@
 {
   "name": "DocMentor",
-  "description": "DocMentor - Персональный AI-ассистент для студентов на базе DistilBERT с RAG и QLoRA",
-  "type": "application"
+  "description": "DocMentor - Персональный AI-ассистент для медицинского образования с гибридной архитектурой, виртуальными пациентами и геймификацией на базе Qwen2.5-MED-3B",
+  "type": "application",
+  "version": "0.2.0",
+  "technology": ["AI", "NLP", "Edge Computing", "Cloud", "Medical Education"],
+  "features": [
+    "Гибридная edge/cloud архитектура",
+    "TREAD оптимизация обработки токенов",
+    "Виртуальные пациенты и клинические симуляции",
+    "Геймификация образовательного процесса",
+    "Адаптивное обучение на основе AI",
+    "Интеграция с международными медицинскими базами",
+    "Социальная платформа для обмена знаниями",
+    "Интеграция с LMS",
+    "Офлайн-синхронизация"
+  ],
+  "keywords": [
+    "медицинское образование",
+    "искусственный интеллект",
+    "виртуальные пациенты",
+    "геймификация",
+    "edge computing",
+    "гибридная архитектура"
+  ],
+  "author": "Temur Turayev",
+  "contact": {
+    "email": "temurturayev7822@gmail.com",
+    "telegram": "@Turayev_Temur",
+    "linkedin": "https://linkedin.com/in/temur-turaev-389bab27b/"
+  },
+  "license": "MIT"
 }
