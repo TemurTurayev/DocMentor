@@ -1,17 +1,89 @@
 # Core dependencies
-streamlit>=1.24.0
+streamlit>=1.28.0
 sentence-transformers>=2.2.2
 faiss-cpu>=1.7.4
-PyMuPDF>=1.22.3  # For PDF processing
-Pillow>=10.0.0   # For image processing
-numpy>=1.24.0    # For numerical operations
+PyMuPDF>=1.22.3         # Для обработки PDF
+Pillow>=10.0.0          # Для обработки изображений
+numpy>=1.24.0           # Для числовых операций
+pandas>=2.0.0           # Для обработки данных
+
+# AI and ML dependencies
+torch>=2.0.0            # PyTorch для ML моделей
+transformers>=4.30.0    # Hugging Face Transformers
+scikit-learn>=1.2.0     # Машинное обучение
+accelerate>=0.20.0      # Оптимизация вычислений
+
+# Vector storage
+hnswlib>=0.7.0          # Эффективное векторное хранилище
+redis>=4.5.0            # Для кэширования
+
+# Medical image processing
+pydicom>=2.3.1          # Для работы с DICOM
+itk>=5.3.0              # ITK для обработки медицинских изображений
+SimpleITK>=2.2.0        # Упрощенный интерфейс к ITK
+
+# Cloud and edge infrastructure
+fastapi>=0.100.0        # API сервера
+uvicorn>=0.22.0         # ASGI сервер
+websockets>=11.0.0      # WebSocket поддержка
+httpx>=0.24.0           # HTTP клиент
+pydantic>=2.0.0         # Валидация данных
+aiocache>=0.11.1        # Асинхронное кэширование
+aiohttp>=3.8.5          # Асинхронный HTTP
+prometheus-client>=0.17.0  # Мониторинг
+
+# Security
+python-jose[cryptography]>=3.3.0  # JWT токены
+passlib>=1.7.4          # Хэширование паролей
+bcrypt>=4.0.0           # Для безопасного хранения паролей
+cryptography>=41.0.0    # Криптографические функции
+
+# Database
+asyncpg>=0.27.0         # Асинхронный PostgreSQL
+sqlalchemy>=2.0.0       # ORM
+alembic>=1.11.0         # Миграции базы данных
+
+# Utilities
+python-dotenv>=1.0.0    # Загрузка .env файлов
+pyyaml>=6.0.0           # Работа с YAML
+tqdm>=4.65.0            # Прогресс-бары
+python-magic>=0.4.27    # Определение типа файла
+loguru>=0.7.0           # Улучшенное логирование
+
+# Communication and integration
+pika>=1.3.0             # RabbitMQ клиент
+confluent-kafka>=2.1.0  # Kafka клиент
+lti>=0.9.5              # Интеграция с LMS через LTI
+graphene>=3.2.0         # GraphQL
+aioredis>=2.0.0         # Асинхронный Redis для очередей
 
 # Testing dependencies
 pytest>=7.4.0
 pytest-asyncio>=0.21.1
 pytest-cov>=4.1.0
+pytest-xdist>=3.3.0     # Параллельное выполнение тестов
+pytest-mock>=3.11.0     # Мокирование в тестах
+locust>=2.15.0          # Нагрузочное тестирование
+
+# Development dependencies
+black>=23.7.0           # Форматирование кода
+isort>=5.12.0           # Сортировка импортов
+flake8>=6.1.0           # Линтер
+mypy>=1.4.0             # Статический анализ типов
+pre-commit>=3.3.0       # Пре-коммит хуки
+
+# Documentation
+sphinx>=7.0.0           # Документация
+sphinx-rtd-theme>=1.2.0  # Тема для Sphinx
+
+# Deployment
+gunicorn>=21.2.0        # WSGI HTTP сервер
+docker>=6.1.0           # Docker API
+kubernetes>=26.1.0      # Kubernetes API
 
 # Optional dependencies
-pdf2image>=1.16.3  # For PDF preview (optional for MVP)
-python-magic>=0.4.27  # For file type detection
-tqdm>=4.65.0  # For progress bars
+pdf2image>=1.16.3       # Для предпросмотра PDF
+pytesseract>=0.3.10     # OCR для изображений
+spacy>=3.6.0            # NLP обработка
+openai>=0.27.8          # OpenAI API
+aiosqlite>=0.19.0       # Асинхронный SQLite
