@@ -12,8 +12,8 @@ import os
 import json
 
 from .base_mode import BaseMode
-from .private_mode import PrivateMode as LocalMode
-from .public_mode import PublicMode as CloudMode
+from .local_mode import LocalMode
+from .cloud_mode import CloudMode
 from ..utils.sync_manager import SyncManager
 from ..utils.cache_manager import CacheManager
 
