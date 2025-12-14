@@ -1,7 +1,12 @@
 """Modes initialization."""
 
 from .base_mode import BaseMode
-from .private_mode import PrivateMode
-from .public_mode import PublicMode
+from .local_mode import LocalMode
+from .cloud_mode import CloudMode
+from .hybrid_mode import HybridMode
 
-__all__ = ['BaseMode', 'PrivateMode', 'PublicMode']
+# Backwards compatibility aliases
+PrivateMode = LocalMode
+PublicMode = CloudMode
+
+__all__ = ['BaseMode', 'LocalMode', 'CloudMode', 'HybridMode', 'PrivateMode', 'PublicMode']
