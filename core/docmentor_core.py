@@ -12,6 +12,14 @@ from .vector_store import FAISSStore
 
 logger = logging.getLogger(__name__)
 
+# LLM imports (optional - only if llama-cpp-python is installed)
+try:
+    from .llm import LLMManager, RAGPipeline
+    LLM_AVAILABLE = True
+except ImportError:
+    LLM_AVAILABLE = False
+    logger.info("LLM module not available. Install llama-cpp-python for AI features.")
+
 
 class DocMentorCore:
     """
@@ -22,7 +30,9 @@ class DocMentorCore:
     def __init__(
         self,
         storage_path: Union[str, Path] = "./data",
-        model_name: str = "distilbert-base-multilingual-cased"
+        model_name: str = "distilbert-base-multilingual-cased",
+        llm_model_path: Optional[str] = None,
+        enable_llm: bool = True
     ):
         """
         Инициализация DocMentor.
@@ -30,10 +40,19 @@ class DocMentorCore:
         Args:
             storage_path: Путь для хранения данных
             model_name: Название модели для эмбеддингов
+            llm_model_path: Путь к GGUF модели (опционально)
+            enable_llm: Включить LLM функции (если доступны)
         """
         self.storage_path = Path(storage_path)
         self.model_name = model_name
         self.vector_store = self._initialize_vector_store()
+
+        # LLM integration
+        self.llm_manager = None
+        self.rag_pipeline = None
+
+        if enable_llm and LLM_AVAILABLE:
+            self._initialize_llm(llm_model_path)
 
         logger.info(f"DocMentor initialized at {self.storage_path}")
 
@@ -240,9 +259,118 @@ class DocMentorCore:
         self.vector_store.save_local(str(store_path))
         logger.info(f"Vector store saved to {store_path}")
 
+    # ==================== LLM Methods ====================
+
+    def _initialize_llm(self, model_path: Optional[str] = None):
+        """
+        Инициализация LLM.
+
+        Args:
+            model_path: Путь к GGUF модели
+        """
+        if not LLM_AVAILABLE:
+            logger.warning("LLM not available")
+            return
+
+        try:
+            # Auto-detect model if not provided
+            if not model_path:
+                models_dir = Path("./models")
+                if models_dir.exists():
+                    gguf_files = list(models_dir.glob("*.gguf"))
+                    if gguf_files:
+                        model_path = str(gguf_files[0])
+                        logger.info(f"Auto-detected model: {model_path}")
+
+            if model_path and Path(model_path).exists():
+                self.llm_manager = LLMManager(
+                    model_path=model_path,
+                    n_ctx=4096,
+                    n_threads=8,
+                    use_metal=True
+                )
+
+                # Load model
+                if self.llm_manager.load_model():
+                    # Create RAG pipeline
+                    self.rag_pipeline = RAGPipeline(
+                        llm_manager=self.llm_manager,
+                        vector_store=self.vector_store
+                    )
+                    logger.info("✅ LLM initialized successfully")
+                else:
+                    logger.warning("Failed to load LLM model")
+                    self.llm_manager = None
+            else:
+                logger.info("No LLM model found. Run: python setup_llm.py")
+
+        except Exception as e:
+            logger.error(f"LLM initialization error: {str(e)}")
+            self.llm_manager = None
+            self.rag_pipeline = None
+
+    def ask_ai(
+        self,
+        question: str,
+        use_context: bool = True,
+        max_tokens: int = 512,
+        temperature: float = 0.7
+    ) -> Dict:
+        """
+        Задать вопрос AI ассистенту (с RAG).
+
+        Args:
+            question: Вопрос студента
+            use_context: Использовать контекст из учебников
+            max_tokens: Максимум токенов в ответе
+            temperature: Температура генерации (0.0-1.0)
+
+        Returns:
+            Словарь с ответом и метаданными
+        """
+        if not self.rag_pipeline:
+            return {
+                "status": "error",
+                "error": "LLM not available. Run: python setup_llm.py",
+                "answer": ""
+            }
+
+        return self.rag_pipeline.answer_question(
+            question=question,
+            use_context=use_context,
+            max_tokens=max_tokens,
+            temperature=temperature
+        )
+
+    def explain_term(self, term: str) -> Dict:
+        """
+        Объяснить медицинский термин через AI.
+
+        Args:
+            term: Медицинский термин
+
+        Returns:
+            Словарь с объяснением
+        """
+        if not self.rag_pipeline:
+            return {"status": "error", "error": "LLM not available"}
+
+        return self.rag_pipeline.explain_term(term)
+
+    def is_llm_available(self) -> bool:
+        """Проверить, доступен ли LLM."""
+        return self.llm_manager is not None and self.llm_manager.is_available()
+
+    def get_llm_stats(self) -> Dict:
+        """Получить статистику LLM."""
+        if self.llm_manager:
+            return self.llm_manager.get_stats()
+        return {"model_loaded": False}
+
     def __repr__(self):
         stats = self.get_stats()
-        return f"DocMentorCore(documents={stats['total_documents']}, chunks={stats['total_chunks']})"
+        llm_status = "✓" if self.is_llm_available() else "✗"
+        return f"DocMentorCore(documents={stats['total_documents']}, chunks={stats['total_chunks']}, LLM={llm_status})"
 
 
 # Для обратной совместимости

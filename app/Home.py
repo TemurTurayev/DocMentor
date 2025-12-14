@@ -1,5 +1,5 @@
 """
-DocMentor 2.0 - Упрощенная версия с фокусом на практику.
+DocMentor 2.1 - С интеграцией локального LLM.
 """
 
 import streamlit as st
@@ -11,7 +11,7 @@ import time
 
 # Configure page
 st.set_page_config(
-    page_title="DocMentor 2.0 - AI Medical Assistant",
+    page_title="DocMentor 2.1 - AI Medical Assistant",
     page_icon="🏥",
     layout="wide",
     initial_sidebar_state="expanded"
@@ -45,8 +45,8 @@ if 'chat_history' not in st.session_state:
     st.session_state.chat_history = []
 
 # Header
-st.markdown('<div class="main-header">🎓 DocMentor 2.0</div>', unsafe_allow_html=True)
-st.markdown('<div class="sub-header">AI-ассистент для медицинского образования</div>', unsafe_allow_html=True)
+st.markdown('<div class="main-header">🎓 DocMentor 2.1</div>', unsafe_allow_html=True)
+st.markdown('<div class="sub-header">AI-ассистент для медицинского образования с локальным LLM</div>', unsafe_allow_html=True)
 
 # Sidebar
 with st.sidebar:
@@ -61,6 +61,15 @@ with st.sidebar:
         st.metric("Фрагментов", stats['total_chunks'])
 
     st.metric("Вопросов задано", len([m for m in st.session_state.chat_history if m['role'] == 'user']))
+
+    # LLM Status
+    if st.session_state.docmentor.is_llm_available():
+        llm_stats = st.session_state.docmentor.get_llm_stats()
+        st.success(f"🤖 LLM: Активен ({llm_stats['total_requests']} запросов)")
+    else:
+        st.warning("🤖 LLM: Не загружен")
+        if st.button("📥 Установить LLM", use_container_width=True):
+            st.info("Запусти: `python setup_llm.py`")
 
     st.divider()
 
@@ -96,15 +105,18 @@ with st.sidebar:
     # Info
     st.header("ℹ️ О проекте")
     st.markdown("""
-    **DocMentor 2.0** - упрощенная версия с фокусом на практику.
+    **DocMentor 2.1** - с локальным AI.
 
-    **Что нового:**
-    - ✅ Простая архитектура
-    - ✅ Быстрая работа
-    - ✅ Локальное хранение
-    - 🔜 Виртуальные пациенты
-    - 🔜 Тестирование знаний
-    - 🔜 Локальная LLM
+    **Новое:**
+    - ✅ Локальный LLM (Qwen2.5-7B)
+    - ✅ RAG Pipeline
+    - ✅ AI режим в чате
+    - ✅ GGUF квантизация
+    - ✅ Metal acceleration (M4)
+
+    **Скоро:**
+    - 🔜 Виртуальные пациенты с AI
+    - 🔜 AI тестирование знаний
     """)
 
 # Main content
@@ -112,7 +124,16 @@ tab1, tab2, tab3 = st.tabs(["💬 Чат", "📄 Документы", "👨‍�
 
 # === TAB 1: Чат ===
 with tab1:
-    st.header("💬 Умный поиск по учебникам")
+    # AI Mode toggle
+    col1, col2 = st.columns([3, 1])
+    with col1:
+        st.header("💬 Умный поиск по учебникам")
+    with col2:
+        if st.session_state.docmentor.is_llm_available():
+            use_ai = st.toggle("🤖 AI режим", value=True, help="Использовать локальный LLM для генерации ответов")
+        else:
+            use_ai = False
+            st.info("AI недоступен")
 
     # Display chat history
     if st.session_state.chat_history:
@@ -135,33 +156,75 @@ with tab1:
         with st.chat_message("user"):
             st.markdown(user_question)
 
-        # Search and respond
+        # Generate response
         with st.chat_message("assistant"):
-            with st.spinner("🔍 Ищу ответ..."):
-                try:
-                    results = st.session_state.docmentor.search(user_question, k=3)
+            if use_ai and st.session_state.docmentor.is_llm_available():
+                # AI MODE - Use RAG pipeline
+                with st.spinner("🤖 AI думает..."):
+                    try:
+                        result = st.session_state.docmentor.ask_ai(
+                            question=user_question,
+                            use_context=True,
+                            max_tokens=512,
+                            temperature=0.7
+                        )
 
-                    if results:
-                        response = "**Нашел в твоих учебниках:**\n\n"
-                        for i, result in enumerate(results, 1):
-                            source = result['metadata'].get('filename', 'Неизвестно')
-                            response += f"**{i}. 📖 {source}**\n{result['text']}\n\n"
+                        if result["status"] == "success":
+                            # Display AI answer
+                            st.markdown(result["answer"])
 
-                        # Add note about future LLM
-                        response += "\n---\n💡 *В следующей версии здесь будет AI-объяснение на основе этих фрагментов!*"
-                    else:
-                        response = "❌ Не нашел информации в загруженных документах.\n\n**Советы:**\n- Проверь, загружены ли нужные учебники\n- Попробуй переформулировать вопрос\n- Используй медицинские термины"
+                            # Show sources if available
+                            if result.get("sources"):
+                                with st.expander(f"📚 Источники ({len(result['sources'])} фрагментов)"):
+                                    for i, source in enumerate(result['sources'], 1):
+                                        st.markdown(f"**{i}. {source['metadata'].get('filename', 'Unknown')}**")
+                                        st.caption(source['text'][:200] + "...")
+                                        st.caption(f"Релевантность: {source['score']:.2f}")
 
-                    st.markdown(response)
+                            # Show stats
+                            meta = result["metadata"]
+                            st.caption(f"⚡ Сгенерировано за {meta['time_seconds']:.1f}s ({meta['tokens_per_second']:.1f} t/s)")
 
-                    # Add to history
-                    st.session_state.chat_history.append({
-                        "role": "assistant",
-                        "content": response
-                    })
+                            response = result["answer"]
+                        else:
+                            error_msg = f"❌ AI ошибка: {result.get('error', 'Unknown')}"
+                            st.error(error_msg)
+                            response = error_msg
 
-                except Exception as e:
-                    st.error(f"❌ Ошибка: {str(e)}")
+                    except Exception as e:
+                        error_msg = f"❌ Ошибка AI: {str(e)}"
+                        st.error(error_msg)
+                        response = error_msg
+
+            else:
+                # SIMPLE MODE - Vector search only
+                with st.spinner("🔍 Ищу ответ..."):
+                    try:
+                        results = st.session_state.docmentor.search(user_question, k=3)
+
+                        if results:
+                            response = "**Нашел в твоих учебниках:**\n\n"
+                            for i, result in enumerate(results, 1):
+                                source = result['metadata'].get('filename', 'Неизвестно')
+                                response += f"**{i}. 📖 {source}**\n{result['text']}\n\n"
+
+                            # Add note about AI mode
+                            if not st.session_state.docmentor.is_llm_available():
+                                response += "\n---\n💡 *Установи LLM (`python setup_llm.py`) для AI-объяснений!*"
+                        else:
+                            response = "❌ Не нашел информации в загруженных документах.\n\n**Советы:**\n- Проверь, загружены ли нужные учебники\n- Попробуй переформулировать вопрос\n- Используй медицинские термины"
+
+                        st.markdown(response)
+
+                    except Exception as e:
+                        response = f"❌ Ошибка: {str(e)}"
+                        st.error(response)
+
+            # Add to history
+            st.session_state.chat_history.append({
+                "role": "assistant",
+                "content": response
+            })
 
 # === TAB 2: Документы ===
 with tab2:

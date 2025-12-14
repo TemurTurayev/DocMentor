@@ -1,0 +1,11 @@
+# LLM Dependencies for DocMentor 2.1
+# Install with: pip install -r requirements-llm.txt
+
+# Core LLM inference
+llama-cpp-python>=0.2.0
+
+# Model downloads
+huggingface-hub[cli]>=0.19.0
+
+# Optional: Faster downloads
+hf-transfer>=0.1.0

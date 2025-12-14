@@ -8,5 +8,5 @@ from .docmentor_core import DocMentorCore
 LocalMode = DocMentorCore
 PrivateMode = DocMentorCore
 
-__version__ = "2.0.0"
+__version__ = "2.1.0"  # LLM integration
 __all__ = ["DocMentorCore", "LocalMode", "PrivateMode"]
