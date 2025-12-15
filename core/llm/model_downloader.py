@@ -18,26 +18,26 @@ class ModelDownloader:
 
     # Recommended models
     MODELS = {
-        "qwen2.5-7b": {
-            "name": "Qwen2.5-7B-Instruct",
-            "repo": "Qwen/Qwen2.5-7B-Instruct-GGUF",
-            "file": "qwen2.5-7b-instruct-q4_k_m.gguf",
-            "size_gb": 4.5,
-            "description": "Recommended: Best balance for M4 16GB. Excellent Russian support."
-        },
         "qwen2.5-3b": {
             "name": "Qwen2.5-3B-Instruct",
             "repo": "Qwen/Qwen2.5-3B-Instruct-GGUF",
             "file": "qwen2.5-3b-instruct-q4_k_m.gguf",
-            "size_gb": 2.0,
-            "description": "Lighter version. Very fast, good quality."
+            "size_gb": 2.1,
+            "description": "Recommended: Fast, good quality, excellent Russian support. Perfect for M4."
         },
-        "openbio-8b": {
-            "name": "OpenBioLLM-8B",
-            "repo": "aaditya/OpenBioLLM-Llama3-8B-GGUF",
-            "file": "openbiollm-llama3-8b.Q4_K_M.gguf",
-            "size_gb": 5.0,
-            "description": "Medical specialist. Better for English, weaker Russian."
+        "qwen2.5-3b-q5": {
+            "name": "Qwen2.5-3B-Instruct (Q5)",
+            "repo": "Qwen/Qwen2.5-3B-Instruct-GGUF",
+            "file": "qwen2.5-3b-instruct-q5_k_m.gguf",
+            "size_gb": 2.44,
+            "description": "Higher quality version. Slower but better responses."
+        },
+        "qwen2.5-3b-small": {
+            "name": "Qwen2.5-3B-Instruct (Small)",
+            "repo": "Qwen/Qwen2.5-3B-Instruct-GGUF",
+            "file": "qwen2.5-3b-instruct-q3_k_m.gguf",
+            "size_gb": 1.72,
+            "description": "Smallest version. Very fast, still good quality."
         }
     }
 
@@ -87,13 +87,8 @@ class ModelDownloader:
 
         try:
             # Check if huggingface-cli is installed
-            result = subprocess.run(
-                ["huggingface-cli", "--version"],
-                capture_output=True,
-                text=True
-            )
-
-            if result.returncode != 0:
+            import shutil
+            if shutil.which("huggingface-cli") is None:
                 logger.error("huggingface-cli not found")
                 logger.info("Install with: pip install huggingface-hub[cli]")
                 return None
